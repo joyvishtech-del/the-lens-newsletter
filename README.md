@@ -200,5 +200,5 @@ It also runs automatically every day at **7:30 AM** with rotating topics (AI New
 ## Author
 
 Viswaath Ganesan 
-Healthcare AI & Medical Imaging Product Leader
-Exploring Generative AI and Applied AI Workflows.
+- Healthcare AI & Medical Imaging Product Leader
+- Exploring Generative AI and Applied AI Workflows.
