@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lens — {{ $('Parse JSON').item.json.topic }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f3efe8;font-family:'Georgia','Times New Roman',serif;color:#2c2418;-webkit-text-size-adjust:100%;">
+
+<!-- Preheader (hidden preview text for inbox) -->
+<div style="display:none;font-size:1px;color:#f3efe8;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">
+  Your focused view on {{ $('Parse JSON').item.json.topic }} is here — curated from multiple sources, delivered in 3 minutes. Dispatched by FutureFrames AI.
+</div>
+
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f3efe8;">
+<tr><td align="center" style="padding:24px 16px;">
+
+<!-- Main Container -->
+<table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;width:100%;">
+
+  <!-- ============ HEADER ============ -->
+  <tr>
+    <td style="background:linear-gradient(135deg, #1a1610 0%, #3d3020 35%, #6b5530 65%, #a8863a 100%);border-radius:12px 12px 0 0;padding:36px 40px 28px;">
+      <!-- Top Bar: Brand + Date -->
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td>
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d4a94e;font-weight:700;">&#10022; The Lens</span>
+          </td>
+          <td align="right">
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.45);">{{ $now.format('MMMM d, yyyy') }}</span>
+          </td>
+        </tr>
+      </table>
+      <!-- Tagline -->
+      <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin:14px 0 16px;">Focused View</p>
+      <!-- Topic Title -->
+      <h1 style="font-family:'Georgia','Times New Roman',serif;font-size:30px;font-weight:400;color:#ffffff;margin:0 0 10px;line-height:1.25;">
+        {{ $('Parse JSON').item.json.topic }}
+      </h1>
+      <!-- Meta line -->
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background-color:rgba(212,169,78,0.2);border:1px solid rgba(212,169,78,0.3);border-radius:20px;padding:5px 14px;">
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#d4a94e;">
+              {{ $('Parse JSON').item.json.source_count || '3' }} sources &middot; {{ $('Parse JSON').item.json.article_count || '5' }} stories &middot; 3 min read
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Warm accent bar -->
+  <tr>
+    <td style="background:linear-gradient(90deg, #d4a94e 0%, #e8c97a 50%, #d4a94e 100%);height:3px;font-size:0;line-height:0;">&nbsp;</td>
+  </tr>
+
+  <!-- ============ SPONSOR SLOT ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:20px 40px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color:#faf6ef;border-radius:8px;border:1px solid #e8e2d6;">
+        <tr>
+          <td style="padding:14px 20px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td>
+                  <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#b8a990;">Presented by</span>
+                  <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;color:#2c2418;font-weight:600;margin:4px 0 2px;">
+                    <a href="https://www.youtube.com/@FutureFramesAI-V" style="color:#2c2418;text-decoration:none;">FutureFrames AI</a>
+                  </p>
+                  <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#998a72;margin:0;">
+                    The Future, Frame by Frame. Watch our latest on YouTube.
+                  </p>
+                </td>
+                <td align="right" valign="middle" width="80">
+                  <a href="https://www.youtube.com/@FutureFramesAI-V" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;color:#a8863a;text-decoration:none;border:1px solid #d4a94e;border-radius:16px;padding:6px 14px;display:inline-block;">Watch</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ============ TOP STORY ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:24px 40px 0;">
+      <!-- Section Label -->
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background-color:#2c2418;border-radius:4px;padding:5px 14px;">
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#d4a94e;font-weight:700;">&#9733; Top Story</span>
+          </td>
+        </tr>
+      </table>
+      <h2 style="font-family:'Georgia','Times New Roman',serif;font-size:22px;font-weight:400;color:#1a1610;margin:16px 0 8px;line-height:1.3;">
+        {{ $('Parse JSON').item.json.top_story_title }}
+      </h2>
+      <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#998a72;margin:0 0 4px;">
+        {{ $('Parse JSON').item.json.top_story_source }} &middot; {{ $('Parse JSON').item.json.top_story_date }}
+      </p>
+      <p style="font-size:16px;line-height:1.75;color:#3d3020;margin:12px 0 0;">
+        {{ $('Parse JSON').item.json.top_story_summary }}
+      </p>
+      <!-- Read More Link -->
+      <p style="margin:18px 0 0;">
+        <a href="{{ $('Parse JSON').item.json.top_story_url }}" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#a8863a;text-decoration:none;font-weight:600;letter-spacing:0.5px;border-bottom:1px solid #d4a94e;padding-bottom:2px;">
+          READ FULL ARTICLE &#8594;
+        </a>
+      </p>
+    </td>
+  </tr>
+
+  <!-- Divider -->
+  <tr>
+    <td style="background-color:#ffffff;padding:24px 40px;">
+      <div style="border-top:1px solid #e8e2d6;"></div>
+    </td>
+  </tr>
+
+  <!-- ============ QUICK BITES ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:0 40px;">
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background-color:#2c2418;border-radius:4px;padding:5px 14px;">
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e8c97a;font-weight:700;">&#9889; Quick Bites</span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Bite 1 -->
+  <tr>
+    <td style="background-color:#ffffff;padding:18px 40px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td width="4" style="background-color:#d4a94e;border-radius:2px;"></td>
+          <td style="padding:0 0 0 16px;">
+            <h3 style="font-family:'Georgia','Times New Roman',serif;font-size:17px;font-weight:400;color:#1a1610;margin:0 0 6px;line-height:1.3;">
+              {{ $('Parse JSON').item.json.bite_1_title }}
+            </h3>
+            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;color:#6b5530;line-height:1.6;margin:0;">
+              {{ $('Parse JSON').item.json.bite_1_summary }}
+              <a href="{{ $('Parse JSON').item.json.bite_1_url }}" style="color:#a8863a;text-decoration:none;font-weight:600;"> &#8594;</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Bite 2 -->
+  <tr>
+    <td style="background-color:#ffffff;padding:18px 40px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td width="4" style="background-color:#a8863a;border-radius:2px;"></td>
+          <td style="padding:0 0 0 16px;">
+            <h3 style="font-family:'Georgia','Times New Roman',serif;font-size:17px;font-weight:400;color:#1a1610;margin:0 0 6px;line-height:1.3;">
+              {{ $('Parse JSON').item.json.bite_2_title }}
+            </h3>
+            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;color:#6b5530;line-height:1.6;margin:0;">
+              {{ $('Parse JSON').item.json.bite_2_summary }}
+              <a href="{{ $('Parse JSON').item.json.bite_2_url }}" style="color:#a8863a;text-decoration:none;font-weight:600;"> &#8594;</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Bite 3 -->
+  <tr>
+    <td style="background-color:#ffffff;padding:18px 40px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td width="4" style="background-color:#d4a94e;border-radius:2px;"></td>
+          <td style="padding:0 0 0 16px;">
+            <h3 style="font-family:'Georgia','Times New Roman',serif;font-size:17px;font-weight:400;color:#1a1610;margin:0 0 6px;line-height:1.3;">
+              {{ $('Parse JSON').item.json.bite_3_title }}
+            </h3>
+            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;color:#6b5530;line-height:1.6;margin:0;">
+              {{ $('Parse JSON').item.json.bite_3_summary }}
+              <a href="{{ $('Parse JSON').item.json.bite_3_url }}" style="color:#a8863a;text-decoration:none;font-weight:600;"> &#8594;</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Divider -->
+  <tr>
+    <td style="background-color:#ffffff;padding:24px 40px;">
+      <div style="border-top:1px solid #e8e2d6;"></div>
+    </td>
+  </tr>
+
+  <!-- ============ THROUGH THE LENS ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:0 40px;">
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background-color:#2c2418;border-radius:4px;padding:5px 14px;">
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#ffffff;font-weight:700;">&#128269; Through the Lens</span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="background-color:#ffffff;padding:16px 40px 0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:linear-gradient(135deg, #faf6ef 0%, #f5eede 100%);border-radius:8px;border:1px solid #e8e2d6;">
+        <tr>
+          <td style="padding:22px 24px;">
+            <h3 style="font-family:'Georgia','Times New Roman',serif;font-size:18px;font-weight:400;color:#1a1610;margin:0 0 8px;line-height:1.3;">
+              {{ $('Parse JSON').item.json.watch_title }}
+            </h3>
+            <p style="font-size:15px;color:#6b5530;line-height:1.75;margin:0;">
+              {{ $('Parse JSON').item.json.watch_summary }}
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ============ TOOLS WE USE (Affiliate) ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:28px 40px 0;">
+      <div style="border-top:1px solid #e8e2d6;padding-top:20px;">
+        <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#b8a990;margin:0 0 12px;">Tools that power The Lens</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td style="padding:0 10px 0 0;" valign="top" width="20%">
+              <a href="YOUR_HOSTINGER_AFFILIATE_LINK" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#a8863a;text-decoration:none;font-weight:600;">Hostinger</a>
+              <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;color:#b8a990;margin:2px 0 0;">VPS hosting</p>
+            </td>
+            <td style="padding:0 10px;" valign="top" width="20%">
+              <a href="https://n8n.io" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#a8863a;text-decoration:none;font-weight:600;">n8n</a>
+              <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;color:#b8a990;margin:2px 0 0;">Automation</p>
+            </td>
+            <td style="padding:0 10px;" valign="top" width="20%">
+              <a href="https://openai.com" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#a8863a;text-decoration:none;font-weight:600;">OpenAI</a>
+              <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;color:#b8a990;margin:2px 0 0;">AI engine</p>
+            </td>
+            <td style="padding:0 10px;" valign="top" width="20%">
+              <a href="https://gnews.io" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#a8863a;text-decoration:none;font-weight:600;">GNews</a>
+              <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;color:#b8a990;margin:2px 0 0;">News data</p>
+            </td>
+            <td style="padding:0 0 0 10px;" valign="top" width="20%">
+              <a href="https://slack.com" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#a8863a;text-decoration:none;font-weight:600;">Slack</a>
+              <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;color:#b8a990;margin:2px 0 0;">Trigger + delivery</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ============ YOUTUBE ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:28px 40px 0;" align="center">
+      <a href="https://www.youtube.com/@FutureFramesAI-V" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#998a72;text-decoration:none;">
+        &#9654;&ensp;FutureFrames AI on YouTube
+      </a>
+    </td>
+  </tr>
+
+  <!-- ============ FOOTER ============ -->
+  <tr>
+    <td style="background-color:#ffffff;padding:28px 40px 0;">
+      <div style="border-top:1px solid #e8e2d6;"></div>
+    </td>
+  </tr>
+  <tr>
+    <td style="background-color:#ffffff;border-radius:0 0 12px 12px;padding:20px 40px 32px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td>
+            <!-- Brand Mark -->
+            <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d4a94e;font-weight:700;">&#10022; The Lens</span>
+            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#998a72;margin:6px 0 0;line-height:1.5;font-style:italic;">
+              Focused View
+            </p>
+            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#b8a990;margin:8px 0 0;line-height:1.5;">
+              Dispatched by <strong style="color:#998a72;">FutureFrames AI</strong><br>
+              Triggered by {{ $('Parse JSON').item.json.triggered_by || 'a team member' }} via Slack<br>
+              The Future, Frame by Frame
+            </p>
+          </td>
+          <td align="right" valign="bottom">
+            <a href="#" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#b8a990;text-decoration:underline;">Unsubscribe</a>
+            <br>
+            <a href="https://www.youtube.com/@FutureFramesAI-V" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#a8863a;text-decoration:none;font-weight:600;">YouTube &#8594;</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+</table>
+<!-- /Main Container -->
+
+</td></tr>
+</table>
+
+</body>
+</html>

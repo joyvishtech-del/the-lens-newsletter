@@ -1,0 +1,19 @@
+🔍 *The Lens: {{ $json.topic }}*
+_Focused View_ • {{ $json.section_label }} • {{ $json.triggered_by }} • {{ $json.timestamp }}
+
+*⭐ Top Story*
+*{{ $json.top_story_title }}*
+{{ $json.top_story_summary }}
+<{{ $json.top_story_url }}|Read more →>
+
+*⚡ Quick Bites*
+• *{{ $json.bite_1_title }}* — {{ $json.bite_1_summary }} <{{ $json.bite_1_url }}|→>
+• *{{ $json.bite_2_title }}* — {{ $json.bite_2_summary }} <{{ $json.bite_2_url }}|→>
+• *{{ $json.bite_3_title }}* — {{ $json.bite_3_summary }} <{{ $json.bite_3_url }}|→>
+
+*🔭 Through the Lens*
+_{{ $json.watch_title }}_
+{{ $json.watch_summary }}
+
+---
+_Dispatched by FutureFrames AI • youtube.com/@FutureFramesAI-V_

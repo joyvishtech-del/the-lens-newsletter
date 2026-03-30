@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscribe to The Lens — FutureFrames AI</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'DM Sans', system-ui, sans-serif;
+    background:#0f0e0a;
+    color:#f5f0e8;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* Animated background grain */
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 40%, rgba(212,169,78,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(168,134,58,0.06) 0%, transparent 50%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .page { position:relative; z-index:1; }
+
+  /* Top bar */
+  .topbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    border-bottom:1px solid rgba(212,169,78,0.12);
+  }
+  .topbar-brand {
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#d4a94e;
+    font-weight:600;
+  }
+  .topbar-yt a {
+    font-size:12px;
+    color:#998a72;
+    text-decoration:none;
+    transition:color 0.2s;
+  }
+  .topbar-yt a:hover { color:#d4a94e; }
+
+  /* Hero */
+  .hero {
+    max-width:560px;
+    margin:0 auto;
+    padding:80px 32px 48px;
+    text-align:center;
+  }
+  .hero-badge {
+    display:inline-block;
+    font-size:10px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:#d4a94e;
+    border:1px solid rgba(212,169,78,0.3);
+    background:rgba(212,169,78,0.08);
+    border-radius:20px;
+    padding:6px 16px;
+    margin-bottom:28px;
+  }
+  .hero h1 {
+    font-family:'DM Serif Display', Georgia, serif;
+    font-size:48px;
+    font-weight:400;
+    line-height:1.15;
+    color:#f5f0e8;
+    margin-bottom:12px;
+  }
+  .hero h1 span { color:#d4a94e; }
+  .hero-tagline {
+    font-size:13px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:rgba(245,240,232,0.4);
+    margin-bottom:28px;
+  }
+  .hero-desc {
+    font-size:17px;
+    line-height:1.7;
+    color:#b8a990;
+    max-width:440px;
+    margin:0 auto 48px;
+  }
+
+  /* Form */
+  .subscribe-form {
+    max-width:440px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  .form-row {
+    margin-bottom:14px;
+  }
+  .form-row input {
+    width:100%;
+    padding:14px 18px;
+    font-family:'DM Sans', system-ui, sans-serif;
+    font-size:15px;
+    color:#f5f0e8;
+    background:rgba(245,240,232,0.06);
+    border:1px solid rgba(212,169,78,0.2);
+    border-radius:10px;
+    outline:none;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .form-row input::placeholder { color:rgba(245,240,232,0.3); }
+  .form-row input:focus {
+    border-color:#d4a94e;
+    background:rgba(212,169,78,0.06);
+  }
+  .form-submit {
+    width:100%;
+    padding:15px 24px;
+    font-family:'DM Sans', system-ui, sans-serif;
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0.5px;
+    color:#1a1610;
+    background:linear-gradient(135deg, #d4a94e 0%, #e8c97a 100%);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition:transform 0.15s, box-shadow 0.2s;
+    margin-top:6px;
+  }
+  .form-submit:hover {
+    transform:translateY(-1px);
+    box-shadow:0 8px 24px rgba(212,169,78,0.25);
+  }
+  .form-submit:active { transform:scale(0.98); }
+  .form-note {
+    text-align:center;
+    font-size:12px;
+    color:rgba(245,240,232,0.3);
+    margin-top:16px;
+  }
+
+  /* Success state */
+  .success-msg {
+    display:none;
+    text-align:center;
+    padding:32px 0;
+  }
+  .success-msg.show {
+    display:block;
+  }
+  .success-icon {
+    font-size:48px;
+    margin-bottom:16px;
+  }
+  .success-msg h2 {
+    font-family:'DM Serif Display', Georgia, serif;
+    font-size:28px;
+    font-weight:400;
+    color:#d4a94e;
+    margin-bottom:8px;
+  }
+  .success-msg p {
+    font-size:15px;
+    color:#998a72;
+    line-height:1.6;
+  }
+
+  /* What you get section */
+  .features {
+    max-width:560px;
+    margin:0 auto;
+    padding:56px 32px 32px;
+  }
+  .features-label {
+    font-size:10px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:#998a72;
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .feature-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .feature-card {
+    padding:20px;
+    background:rgba(245,240,232,0.03);
+    border:1px solid rgba(212,169,78,0.1);
+    border-radius:10px;
+  }
+  .feature-day {
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:#d4a94e;
+    margin-bottom:6px;
+  }
+  .feature-topic {
+    font-size:14px;
+    font-weight:500;
+    color:#f5f0e8;
+    margin-bottom:4px;
+  }
+  .feature-desc {
+    font-size:12px;
+    color:#998a72;
+    line-height:1.5;
+  }
+
+  /* Footer */
+  .footer {
+    text-align:center;
+    padding:48px 32px 32px;
+    border-top:1px solid rgba(212,169,78,0.08);
+    margin-top:40px;
+  }
+  .footer-brand {
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:#d4a94e;
+    font-weight:600;
+  }
+  .footer-tagline {
+    font-size:12px;
+    color:rgba(245,240,232,0.25);
+    margin-top:6px;
+    font-style:italic;
+  }
+  .footer-sub {
+    font-size:11px;
+    color:rgba(245,240,232,0.2);
+    margin-top:12px;
+  }
+
+  /* Error state */
+  .form-error {
+    display:none;
+    text-align:center;
+    font-size:13px;
+    color:#e24b4a;
+    margin-top:10px;
+  }
+
+  @media (max-width:480px) {
+    .hero h1 { font-size:36px; }
+    .hero { padding:60px 24px 36px; }
+    .feature-grid { grid-template-columns:1fr; }
+    .subscribe-form { padding:0 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">&#10022; FutureFrames AI</div>
+    <div class="topbar-yt"><a href="https://www.youtube.com/@FutureFramesAI-V">YouTube &#8594;</a></div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">Free daily newsletter</div>
+    <h1><span>The Lens</span></h1>
+    <div class="hero-tagline">Focused View</div>
+    <p class="hero-desc">
+      AI news, healthcare tech, startup funding, and policy — curated from verified sources and delivered to your inbox every morning at 7:30 AM.
+    </p>
+  </div>
+
+  <!-- Subscribe form -->
+  <div class="subscribe-form" id="form-container">
+    <form id="subscribe-form" method="POST" action="YOUR_N8N_WEBHOOK_URL_HERE">
+      <div class="form-row">
+        <input type="text" name="name" placeholder="Your name" required autocomplete="given-name">
+      </div>
+      <div class="form-row">
+        <input type="email" name="email" placeholder="Your email address" required autocomplete="email">
+      </div>
+      <button type="submit" class="form-submit">Subscribe to The Lens &#8594;</button>
+      <div class="form-error" id="form-error">Something went wrong. Please try again.</div>
+      <p class="form-note">No spam. Unsubscribe anytime. Dispatched by FutureFrames AI.</p>
+    </form>
+  </div>
+
+  <!-- Success message (hidden by default) -->
+  <div class="success-msg" id="success-msg">
+    <div class="success-icon">&#10022;</div>
+    <h2>You're in.</h2>
+    <p>Welcome to The Lens. Your first dispatch arrives tomorrow at 7:30 AM.<br>Focused views on AI, healthcare tech, startups, and policy.</p>
+  </div>
+
+  <!-- What you get -->
+  <div class="features">
+    <div class="features-label">What you'll get every week</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-day">Mon + Fri</div>
+        <div class="feature-topic">AI news & breakthroughs</div>
+        <div class="feature-desc">Research, model launches, and industry moves</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-day">Tue + Sat</div>
+        <div class="feature-topic">Healthcare AI</div>
+        <div class="feature-desc">Hospital tech, FDA updates, drug discovery</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-day">Wednesday</div>
+        <div class="feature-topic">Startups & funding</div>
+        <div class="feature-desc">Rounds, acquisitions, and new launches</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-day">Thursday</div>
+        <div class="feature-topic">AI regulation & policy</div>
+        <div class="feature-desc">Laws, governance, and ethical frameworks</div>
+      </div>
+    </div>
+    <div class="feature-card" style="margin-top:12px;text-align:center;">
+      <div class="feature-day">Sunday</div>
+      <div class="feature-topic">Week in AI roundup</div>
+      <div class="feature-desc">The week's biggest stories — synthesized, not summarized</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">&#10022; The Lens</div>
+    <div class="footer-tagline">Focused View</div>
+    <div class="footer-sub">Dispatched by FutureFrames AI &middot; The Future, Frame by Frame</div>
+  </div>
+
+</div>
+
+<script>
+document.getElementById('subscribe-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const form = e.target;
+  const submitBtn = form.querySelector('.form-submit');
+  const errorEl = document.getElementById('form-error');
+  
+  // Disable button during submission
+  submitBtn.textContent = 'Subscribing...';
+  submitBtn.disabled = true;
+  errorEl.style.display = 'none';
+  
+  const formData = {
+    name: form.name.value.trim(),
+    email: form.email.value.trim(),
+    subscribed_date: new Date().toISOString().split('T')[0],
+    source: 'web_form'
+  };
+  
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    
+    if (response.ok) {
+      // Show success
+      document.getElementById('form-container').style.display = 'none';
+      document.getElementById('success-msg').classList.add('show');
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (err) {
+    errorEl.style.display = 'block';
+    submitBtn.textContent = 'Subscribe to The Lens \u2192';
+    submitBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

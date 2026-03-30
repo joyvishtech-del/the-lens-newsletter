@@ -1,0 +1,286 @@
+{
+  "name": "The Lens — Newsletter by FutureFrames AI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lens-trigger",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "n-webhook",
+      "name": "Webhook — Slack /lens",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"response_type\":\"ephemeral\",\"text\":\"🔍 Focusing The Lens on *{{ $json.body.text }}*... This takes about 30 seconds.\"}",
+        "options": {}
+      },
+      "id": "n-ack",
+      "name": "Instant Ack",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a1", "name": "topic", "value": "={{ $('Webhook — Slack /lens').item.json.body.text }}", "type": "string" },
+            { "id": "a2", "name": "triggered_by", "value": "={{ $('Webhook — Slack /lens').item.json.body.user_name }}", "type": "string" },
+            { "id": "a3", "name": "channel_id", "value": "={{ $('Webhook — Slack /lens').item.json.body.channel_id }}", "type": "string" },
+            { "id": "a4", "name": "timestamp", "value": "={{ $now.format('yyyy-MM-dd') }}", "type": "string" },
+            { "id": "a5", "name": "section_label", "value": "On-demand", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n-set-slack",
+      "name": "Set — From Slack",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "triggerAtMinute": 30, "triggerAtHour": 7 }]
+        }
+      },
+      "id": "n-schedule",
+      "name": "Schedule — 7:30 AM Daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 520]
+    },
+    {
+      "parameters": {
+        "jsCode": "const dayOfWeek = $now.toJSDate().getDay();\n\nconst schedule = {\n  0: { topic: 'Week in AI Roundup', section_label: 'Weekly Recap' },\n  1: { topic: 'AI News & Breakthroughs', section_label: 'Monday Briefing' },\n  2: { topic: 'Healthcare AI & Hospital Tech', section_label: 'Healthcare Focus' },\n  3: { topic: 'AI Startups & Funding', section_label: 'Startup Watch' },\n  4: { topic: 'AI Regulation & Policy', section_label: 'Policy Desk' },\n  5: { topic: 'AI News & Breakthroughs', section_label: 'Friday Drops' },\n  6: { topic: 'Healthcare AI Deep Dive', section_label: 'Saturday Deep Dive' }\n};\n\nconst today = schedule[dayOfWeek];\n\nreturn [{ json: {\n  topic: today.topic,\n  section_label: today.section_label,\n  triggered_by: 'FutureFrames AI Auto-scheduler',\n  channel_id: 'YOUR_DEFAULT_SLACK_CHANNEL_ID',\n  timestamp: $now.format('yyyy-MM-dd')\n}}];"
+      },
+      "id": "n-daily-topic",
+      "name": "Daily Topic Rotation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 520]
+    },
+    {
+      "parameters": {
+        "url": "=https://news.google.com/rss/search?q={{ encodeURIComponent($json.topic) }}&hl=en"
+      },
+      "id": "n-google-rss",
+      "name": "Google News RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [860, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.all();\n\nconst articles = allItems.map(item => {\n  const j = item.json;\n  return {\n    title: j.title || j.name || '',\n    description: j.contentSnippet || j.description || j.content || j.snippet || '',\n    source: j.source?.name || j.source?.url || j.source || j.creator || '',\n    url: j.url || j.link || '',\n    publishedAt: j.publishedAt || j.pubDate || j.isoDate || j.published_at || '',\n    fullContent: j.content || j.contentSnippet || j.description || ''\n  };\n}).filter(a => a.title && a.title.length > 5);\n\nconst seen = new Set();\nconst unique = [];\nfor (const a of articles) {\n  const key = a.title.toLowerCase().substring(0, 80);\n  if (key && !seen.has(key)) { seen.add(key); unique.push(a); }\n}\n\nreturn unique.slice(0, 20).map(a => ({ json: a }));"
+      },
+      "id": "n-dedup",
+      "name": "Deduplicate and Rank",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 400],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [{ "leftValue": "={{ $input.all().length }}", "rightValue": "0", "operator": { "type": "number", "operation": "gt" } }]
+        }
+      },
+      "id": "n-if-articles",
+      "name": "IF — Has Articles?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are the editor of \"The Lens,\" a premium AI newsletter by FutureFrames AI. Your tagline is \"Focused View.\"\n\nTHE TOPIC: \"{{ $json.topic }}\"\n\nYOUR TASK: Read the articles below and create a curated newsletter. Pick the 4 most interesting and relevant stories.\n\nRULES:\n1. Articles should be broadly related to \"{{ $json.topic }}\". Include anything connected — regulation, startups, research, products, industry impact, ethics, applications. Only skip articles completely unrelated to the topic.\n2. Use ONLY the exact URLs from the data. If a URL contains \"news.google.com/rss/articles/\", that is fine — use it as-is. NEVER invent URLs.\n3. Write specific summaries with real details from the article — mention company names, people, technologies, numbers. If the description is short, expand based on what the title implies but do NOT fabricate facts.\n4. For the source name: if the \"source\" field is empty, extract the source from the end of the title (many titles end with \" - Source Name\") or from the URL domain.\n5. Pick stories from DIFFERENT sources when possible.\n6. The \"Through the Lens\" section should identify ONE emerging pattern or trend across the articles.\n\nARTICLES:\n{{ JSON.stringify($input.all().map(item => ({title: item.json.title || '', description: (item.json.description || item.json.fullContent || '').substring(0, 1500), source: item.json.source || '', url: item.json.url || '#', date: item.json.publishedAt || ''})), null, 2) }}\n\nRespond in this EXACT JSON format (no markdown, no backticks, no explanation):\n{\"top_story_title\": \"headline\", \"top_story_summary\": \"2-3 sentences with specific facts\", \"top_story_source\": \"source name\", \"top_story_date\": \"date\", \"top_story_url\": \"exact url from data\", \"bite_1_title\": \"headline\", \"bite_1_summary\": \"1-2 specific sentences\", \"bite_1_url\": \"exact url from data\", \"bite_2_title\": \"headline\", \"bite_2_summary\": \"1-2 specific sentences\", \"bite_2_url\": \"exact url from data\", \"bite_3_title\": \"headline\", \"bite_3_summary\": \"1-2 specific sentences\", \"bite_3_url\": \"exact url from data\", \"watch_title\": \"trend title\", \"watch_summary\": \"2-3 sentences on an emerging pattern\", \"article_count\": 4, \"source_count\": 3}"
+      },
+      "id": "n-llm",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1520, 360],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  let text = $input.first().json.text;\n  text = text.trim();\n  text = text.replace(/```json\\s*/gi, '');\n  text = text.replace(/```\\s*/g, '');\n  const start = text.indexOf('{');\n  const end = text.lastIndexOf('}');\n  if (start === -1 || end === -1) throw new Error('No JSON object found');\n  text = text.substring(start, end + 1);\n  const parsed = JSON.parse(text);\n  let meta = {};\n  try { meta = $('Set — From Slack').first().json; } catch(e1) {\n    try { meta = $('Daily Topic Rotation').first().json; } catch(e2) { meta = {}; }\n  }\n  parsed.topic = meta.topic || parsed.top_story_title || 'AI Update';\n  parsed.triggered_by = meta.triggered_by || 'Auto-scheduler';\n  parsed.channel_id = meta.channel_id || '';\n  parsed.timestamp = meta.timestamp || $now.format('yyyy-MM-dd');\n  parsed.section_label = meta.section_label || 'Daily Briefing';\n  return [{ json: parsed }];\n} catch (e) {\n  return [{ json: { error: true, message: 'Parse failed: ' + e.message, raw: $input.first().json.text } }];\n}"
+      },
+      "id": "n-parse",
+      "name": "Parse JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1740, 360],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [{ "leftValue": "={{ $json.top_story_title }}", "rightValue": "", "operator": { "type": "string", "operation": "notEquals" } }]
+        },
+        "options": { "looseTypeValidation": true }
+      },
+      "id": "n-if-json",
+      "name": "IF — Valid JSON?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1960, 360]
+    },
+    {
+      "parameters": {
+        "channel": "#the-lens",
+        "text": "=🔍 *The Lens: {{ $json.topic }}*\n_Focused View_ • {{ $json.section_label }} • {{ $json.triggered_by }} • {{ $json.timestamp }}\n\n*⭐ Top Story*\n*{{ $json.top_story_title }}*\n{{ $json.top_story_summary }}\n<{{ $json.top_story_url }}|Read more →>\n\n*⚡ Quick Bites*\n• *{{ $json.bite_1_title }}* — {{ $json.bite_1_summary }} <{{ $json.bite_1_url }}|→>\n• *{{ $json.bite_2_title }}* — {{ $json.bite_2_summary }} <{{ $json.bite_2_url }}|→>\n• *{{ $json.bite_3_title }}* — {{ $json.bite_3_summary }} <{{ $json.bite_3_url }}|→>\n\n*🔭 Through the Lens*\n_{{ $json.watch_title }}_\n{{ $json.watch_summary }}\n\n---\n_Dispatched by FutureFrames AI • youtube.com/@FutureFramesAI-V_",
+        "otherOptions": {}
+      },
+      "id": "n-slack-post",
+      "name": "Slack — Post Newsletter",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2200, 200]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "sheetId": { "value": "YOUR_GOOGLE_SHEET_ID" },
+        "sheetName": "Subscribers",
+        "options": {}
+      },
+      "id": "n-get-subs",
+      "name": "Google Sheets — Get Subscribers",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2200, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [{ "leftValue": "={{ $json.active }}", "rightValue": "TRUE", "operator": { "type": "string", "operation": "equals" } }]
+        }
+      },
+      "id": "n-filter-active",
+      "name": "Filter Active Subscribers",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2420, 400]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "toList": "={{ $json.email }}",
+        "subject": "=The Lens: {{ $('Parse JSON').item.json.topic }} — {{ $('Parse JSON').item.json.section_label }}",
+        "emailType": "html",
+        "message": "=PASTE_GMAIL_TEMPLATE_HERE",
+        "options": { "senderName": "The Lens by FutureFrames AI" }
+      },
+      "id": "n-gmail",
+      "name": "Gmail — Send Newsletter",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2640, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": { "value": "YOUR_GOOGLE_SHEET_ID" },
+        "sheetName": "Log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.timestamp }}",
+            "topic": "={{ $json.topic }}",
+            "section_label": "={{ $json.section_label }}",
+            "triggered_by": "={{ $json.triggered_by }}",
+            "source_count": "={{ $json.source_count }}",
+            "top_story": "={{ $json.top_story_title }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "n-log",
+      "name": "Google Sheets — Log Edition",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2200, 600]
+    },
+    {
+      "parameters": {
+        "channel": "#lens-errors",
+        "text": "=⚠️ The Lens failed.\nTopic: {{ $json.topic || 'Unknown' }}\nError: No articles found or LLM returned invalid output.\nCheck the execution log.",
+        "otherOptions": {}
+      },
+      "id": "n-error-slack",
+      "name": "Slack — Error Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1520, 560]
+    }
+  ],
+  "connections": {
+    "Webhook — Slack /lens": {
+      "main": [[{ "node": "Instant Ack", "type": "main", "index": 0 }]]
+    },
+    "Instant Ack": {
+      "main": [[{ "node": "Set — From Slack", "type": "main", "index": 0 }]]
+    },
+    "Set — From Slack": {
+      "main": [[{ "node": "Google News RSS", "type": "main", "index": 0 }]]
+    },
+    "Schedule — 7:30 AM Daily": {
+      "main": [[{ "node": "Daily Topic Rotation", "type": "main", "index": 0 }]]
+    },
+    "Daily Topic Rotation": {
+      "main": [[{ "node": "Google News RSS", "type": "main", "index": 0 }]]
+    },
+    "Google News RSS": {
+      "main": [[{ "node": "Deduplicate and Rank", "type": "main", "index": 0 }]]
+    },
+    "Deduplicate and Rank": {
+      "main": [[{ "node": "IF — Has Articles?", "type": "main", "index": 0 }]]
+    },
+    "IF — Has Articles?": {
+      "main": [
+        [{ "node": "Basic LLM Chain", "type": "main", "index": 0 }],
+        [{ "node": "Slack — Error Alert", "type": "main", "index": 0 }]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [[{ "node": "Parse JSON", "type": "main", "index": 0 }]]
+    },
+    "Parse JSON": {
+      "main": [[{ "node": "IF — Valid JSON?", "type": "main", "index": 0 }]]
+    },
+    "IF — Valid JSON?": {
+      "main": [
+        [
+          { "node": "Slack — Post Newsletter", "type": "main", "index": 0 },
+          { "node": "Google Sheets — Get Subscribers", "type": "main", "index": 0 },
+          { "node": "Google Sheets — Log Edition", "type": "main", "index": 0 }
+        ],
+        [{ "node": "Slack — Error Alert", "type": "main", "index": 0 }]
+      ]
+    },
+    "Google Sheets — Get Subscribers": {
+      "main": [[{ "node": "Filter Active Subscribers", "type": "main", "index": 0 }]]
+    },
+    "Filter Active Subscribers": {
+      "main": [[{ "node": "Gmail — Send Newsletter", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": [
+    { "name": "The Lens" },
+    { "name": "FutureFrames AI" },
+    { "name": "newsletter" }
+  ]
+}
